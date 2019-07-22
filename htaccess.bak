@@ -1,0 +1,15 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond $1 !^(config|core|js|fonts|robots\.txt)
+
+RewriteRule ^(.+)$ index.php/$1 [L]
+
+# nginx configuration
+
+location / {
+  if (!-e $request_filename){
+    rewrite ^(.+)$ /index.php/$1 break;
+  }
+}

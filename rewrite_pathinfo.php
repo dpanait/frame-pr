@@ -1,0 +1,1 @@
+<?php if(!empty($_SERVER['PATH_INFO'])) header("Location: ".$_SERVER['PATH_INFO']); $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_ORIGINAL_PATH']; ?>

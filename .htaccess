@@ -1,0 +1,16 @@
+#RewriteEngine On
+
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond $1 !^(config|core|js|css|fonts|robots\.txt)
+
+#RewriteRule ^(.+)$ index.php/$1 [R,L]
+#RewriteRule ^(.*)$ index.php?path=$1 [NC,L,QSA]
+#<IfModule mod_rewrite.c>
+RewriteEngine On
+#RewriteBase /prueba
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php/p=$1 [L]
+#</IfModule>
