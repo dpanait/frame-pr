@@ -457,28 +457,31 @@ class Apirequest {
                 }
 
             }
-            // si el campo de password_new_check esta vacio no hacemos nada para cambiar contrasena
-            if($password_new_check != ""){
-                // actualizamos la contraseña comprobando que la password_old es la misma que tiene que cambiar
-                $sql_pass = $this->_db_bullcard->prepare("SELECT password FROM users WHERE users_id = :users_id");
-                $sql_pass->bindParam(":users_id", $users_id, PDO::PARAM_INT);
-                $sql_pass->execute();
-                $res_pass = $sql_pass->fetchAll(PDO::FETCH_OBJ);
-                if($res_pass){
-                    $password_saved = $res_pass[0]->password;
-                    if(password_verify($password_old,$password_saved)){
-                        $pass_encripted = password_hash($password_new,PASSWORD_DEFAULT);
-                        $res_pass_update = $this->_usersAdd->update_users_column("password", $users_id, $pass_encripted);
-                        if($res_pass_update){
-                            $msg .= " <br>Actualizada la contraseña.";
-                            $status = true;
-                        } else {
-                            $msg .= " <br> No se a actualizada la contraseña.";
-                            $status = false;
+            if($this->get_type_login($users_id) == 1){
+                // si el campo de password_new_check esta vacio no hacemos nada para cambiar contrasena
+                if($password_new_check != ""){
+                    // actualizamos la contraseña comprobando que la password_old es la misma que tiene que cambiar
+                    $sql_pass = $this->_db_bullcard->prepare("SELECT password FROM users WHERE users_id = :users_id");
+                    $sql_pass->bindParam(":users_id", $users_id, PDO::PARAM_INT);
+                    $sql_pass->execute();
+                    $res_pass = $sql_pass->fetchAll(PDO::FETCH_OBJ);
+                    if($res_pass){
+                        $password_saved = $res_pass[0]->password;
+                        if(password_verify($password_old,$password_saved)){
+                            $pass_encripted = password_hash($password_new,PASSWORD_DEFAULT);
+                            $res_pass_update = $this->_usersAdd->update_users_column("password", $users_id, $pass_encripted);
+                            if($res_pass_update){
+                                $msg .= " <br>Actualizada la contraseña.";
+                                $status = true;
+                            } else {
+                                $msg .= " <br> No se a actualizada la contraseña.";
+                                $status = false;
+                            }
                         }
                     }
                 }
             }
+            
             // si tengo email actualizo email en la tabla users
             if($email != ""){
                 $res_email_upd = $this->_usersAdd->update_users_column("email", $users_id, $email);
@@ -613,8 +616,22 @@ class Apirequest {
         return ["msg"=>"Error.", "status" => false,"users_id"=>null];
     }
     /**
-     * buscamos el email 
+     * buscamos el typo_login
      */
+    public function get_type_login($users_id){
+        if($users_id > 0){
+            // buscamos el loginn_type
+            $sql_type_login = $this->_db_bullcard->prepare("SELECT login_type_id FROM users WHEREusers_id = :users_id");
+            $sql_type_login->bindParam(":users_id", $users_id, PDO::PARAM_INT);
+            $sql_type_login->execute();
+            $res_type_login = $sql_type_login->fetchAll(PDO::FETCH_OBJ);
+            if($res_type_login){
+                $login_type_id = $res_type_login[0]->login_type_id;
+                return $login_type_id;
+            }
+        }
+        return false;
+    }
     /**
      * Actualiza campos dados en la tabla users
      */
