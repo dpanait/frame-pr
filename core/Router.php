@@ -14,14 +14,20 @@ class Router {
 
        // params
        $queryParams = $url;
-
-       $dispatch = new $controller($controller_name,$action);
-       if(method_exists($controller,$action)){
-           call_user_func_array([$dispatch,$action],$queryParams);
-       }
-       else{
-           die('That method does not exist in the controller \"' .$controller_name. '\"');
-       }
+       //print_r($url);
+        if(class_exists($controller_name)){
+            $dispatch = new $controller($controller_name,$action);
+            if(method_exists($controller,$action)){
+                call_user_func_array([$dispatch,$action],$queryParams);
+            }
+            else{
+                self::redirect('');
+                //die('Este metodo no existe en el controlador \"' .$controller_name. '\"');
+            }
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            die('<div class="alert-danger">Pagina no encontrada</div>');
+        }
     }
 
     public static function redirect($location){

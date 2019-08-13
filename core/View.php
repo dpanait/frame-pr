@@ -2,6 +2,7 @@
 
 class View{
     protected $_head, $_body, $_siteTitle = SITE_TITLE, $_ouputBuffer, $_layout = DEFAULT_LAYOUT;
+    public $_viewName = null, $_actionName = null;
 
     public function __construct(){
 
@@ -10,15 +11,17 @@ class View{
         //print_r($data);
         $viewArray = explode('/',$viewName);
         $viewString = implode(DS, $viewArray);
+        extract($data);
         if(file_exists(ROOT . DS . 'app' . DS . 'views' . DS . $viewString . '.php')){
+            $this->setViewName((explode("/",$viewString)[0]));
+            $this->setActionName((explode("/",$viewString)[1]));
             include(ROOT . DS . 'app' . DS . 'views' . DS . $viewString . '.php');
             include(ROOT . DS . 'app' . DS . 'views' . DS . 'layouts' .DS . $this->_layout . '.php');
             
-        } 
-        else
-        {
+        }else {
             die('The view \"'. $viewName .'\" does not exist');
         } 
+  
     }
     public function content($type){
         if($type == 'head'){
@@ -29,6 +32,7 @@ class View{
         return false;
     }
     public function start($type){
+        //extract(get_object_vars(new View()), EXTR_OVERWRITE);
         $this->_ouputBuffer = $type;
         ob_start();
     }
@@ -50,5 +54,17 @@ class View{
     }
     public function setLayout($path){
         $this->_layout = $path;
+    }
+    public function setViewName($viewName){
+        $this->_viewName = $viewName;
+    }
+    public function ViewName(){
+        return strtolower($this->_viewName);
+    }
+    public function ActionName(){
+        return strtolower($this->_actionName);
+    }
+    public function setActionName($actionName){
+        $this->_actionName = $actionName;
     }
 }

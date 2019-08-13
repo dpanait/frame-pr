@@ -3,7 +3,7 @@ class Validate{
     private $_passed=false, $_errors=[], $_db = null;
 
     public function __construct(){
-        $this->_db = DB::getInstance();
+        //$this->_db = DB::getInstance();
     }
 
     public function check($source, $items= []){
@@ -90,7 +90,8 @@ class Validate{
         foreach($this->_errors AS $error){
             if(is_array($error)){
                 $html.='<li class="text-danger">'.$error[0].'</li>';
-                $html.='<script>jQuery("document").ready(function(){jQuery("#'.$error[1].'").parent().closest("div").addClass("has-error")})</script>';
+                //$html.='<script>jQuery("document").ready(function(){jQuery(".'.$error[1].'").parent().closest("div").addClass("bg-success")})</script>';
+                $html.='<script>jQuery("document").ready(function(){jQuery(".'.$error[1].' ul").removeClass("bg-danger");jQuery(".'.$error[1].' ul").addClass("bg-success");})</script>';
             } else {
                 $html.='<li class="text-danger">'.$error.'</li>';
             }

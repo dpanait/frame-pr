@@ -8,9 +8,11 @@
 #RewriteRule ^(.*)$ index.php?path=$1 [NC,L,QSA]
 #<IfModule mod_rewrite.c>
 RewriteEngine On
-#RewriteBase /prueba
+#RewriteBase /api_web
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond $1 !^(config|core|js|css|fonts|robots\.txt)
 RewriteRule ^(.+)$ index.php/p=$1 [L]
+
 #</IfModule>
